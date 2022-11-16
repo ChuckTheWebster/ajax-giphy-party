@@ -1,5 +1,6 @@
 'use strict';
 
+
 function getSearchValueAndSearch(evt) {
     evt.preventDefault();
     let searchTerm = $('#search').val();
@@ -15,8 +16,12 @@ async function getGif(searchTerm) {
 function addGifToPage(response) {
     let gifSource = response.data.data[0].images.original.url;
     console.log(response.data.data[0].images.original.url);
-    let $newGif = $(`<img src="${gifSource}">`);
-    $('body').append($newGif);
+    let $newGif = $(`<img class="gif" src="${gifSource}">`);
+    $('#gif-container').append($newGif);
 }
 
 $('form').on('submit', getSearchValueAndSearch);
+
+$('#remove-gifs').on('click', function(evt) {
+    $('.gif').remove();
+});
