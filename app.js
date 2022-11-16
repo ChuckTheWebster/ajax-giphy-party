@@ -1,23 +1,34 @@
 'use strict';
+const GIPHY_API_KEY = "ifGZaDq48hprw2OFYlDXvOMKnb79pL6X";
+const BASE_URL = 'http://api.giphy.com/v1';
+let ARRAY_LENGTH;
 
-
-function getSearchValueAndSearch(evt) {
+async function getSearchValueAndSearch(evt) {
     evt.preventDefault();
     let searchTerm = $('#search').val();
-    getGif(searchTerm);
-}
+    const response = await getGif(searchTerm);
 
-async function getGif(searchTerm) {
-    let response = await axios.get(`http://api.giphy.com/v1/gifs/search?q=${searchTerm}&api_key=ifGZaDq48hprw2OFYlDXvOMKnb79pL6X`);
-    console.log(response);
     addGifToPage(response);
 }
 
+async function getGif(searchTerm) {
+    let response = await axios.get(`${BASE_URL}/gifs/search?q=${searchTerm}&api_key=${GIPHY_API_KEY}`);
+    console.log(response);
+    return response;
+}
+
 function addGifToPage(response) {
-    let gifSource = response.data.data[0].images.original.url;
+    ARRAY_LENGTH = response.data.data.length;
+    let gifIndex = getRandomInd();
+    let gifSource = response.data.data[gifIndex].images.original.url;
     console.log(response.data.data[0].images.original.url);
     let $newGif = $(`<img class="gif" src="${gifSource}">`);
     $('#gif-container').append($newGif);
+}
+
+function getRandomInd() {
+
+    return Math.floor(Math.random() * ARRAY_LENGTH);
 }
 
 $('form').on('submit', getSearchValueAndSearch);
